@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script
+      src="https://cdn.socket.io/4.8.1/socket.io.min.js"
+      integrity="sha384-mkQ3/7FUtcGyoppY6bz/PORYoGqOl7/aSUMn2ymDOJcapfS6PHqxhRTMh1RR0Q6+"
+      crossorigin="anonymous"
+    ></script>
+    <script src="app.js" defer></script>
+    <link rel="stylesheet" href="style.css" />
+    <title>CHAT APP</title>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Welcome to My Chat App</h1>
+      <form action="">
+        <input type="text" id="messageInput" placeholder="Message..." />
+        <button type="submit" id="sendButton">Send</button>
+      </form>
+      <ul id="messages"></ul>
+      <div id="typingIndicator" style="display: none">User is typing...</div>
+    </div>
+  </body>
+</html>
