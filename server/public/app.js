@@ -15,6 +15,7 @@ const sendMessage = (e) => {
 
 form.addEventListener("submit", sendMessage);
 
+// Listen for chat messages from the server
 socket.on("chat message", (msg) => {
   const chatMessage = document.createElement("li");
   chatMessage.textContent = msg;
@@ -22,6 +23,7 @@ socket.on("chat message", (msg) => {
   window.scrollTo(0, document.body.scrollHeight);
   typingIndicator.style.display = "none";
 });
+
 
 socket.on("connect", () => {
   console.log("Connected to server with ID:", socket.id);
@@ -33,11 +35,15 @@ messageInput.addEventListener("keypress", (e) => {
   socket.emit("activity", `${socket.id.substring(0, 6)} is typing...`);
 });
 
-
+let typingTimeout;
+// Handle the activity event to show typing indicator
 socket.on("activity", (data) => {
+  // Clear previous timeout only if one exists
+  if (typingTimeout) clearTimeout(typingTimeout);
   typingIndicator.style.display = "block";
   typingIndicator.textContent = data;
-  setTimeout(() => {
+  // Start new timeout to hide typing indicator
+  typingTimeout = setTimeout(() => {
     typingIndicator.style.display = "none";
-  }, 2000);
+  }, 1000);
 });
