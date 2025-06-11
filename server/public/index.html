@@ -13,14 +13,34 @@
     <title>CHAT APP</title>
   </head>
   <body>
-    <div class="container">
+    <main class="container">
       <h1>Welcome to My Chat App</h1>
-      <form action="">
+      <form id="room">
+        <label for="roomInput">Enter Room Name:</label>
+        <input
+          type="text"
+          id="roomInput"
+          placeholder="Room Name"
+          required
+          size="5"
+        />
+        <label for="usernameInput">Enter Your Name:</label>
+        <input
+          type="text"
+          id="usernameInput"
+          placeholder="Your Name"
+          required
+          maxlength="12"
+          size="5"
+        />
+        <button type="submit" id="joinButton">Join Room</button>
+      </form>
+      <form id="chatForm">
         <input type="text" id="messageInput" placeholder="Message..." />
         <button type="submit" id="sendButton">Send</button>
       </form>
-      <ul id="messages"></ul>
-      <div id="typingIndicator" style="display: none">User is typing...</div>
-    </div>
+      <ul id="messagesDisplay"></ul>
+      <p id="typingIndicator" style="display: none">User is typing...</p>
+    </main>
   </body>
 </html>
