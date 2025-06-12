@@ -45,7 +45,7 @@ chatForm.addEventListener("submit", sendMessage);
 joinButton.addEventListener("click", joinRoom);
 
 // Listen for chat messages from the server/Backend
-socket.on("chat message", ({ message, username }) => {
+socket.on("chat message", ({ message, username, timeStamp }) => {
   console.log("Received message:", message, "from", username);
 
   const chatMessage = document.createElement("li");
