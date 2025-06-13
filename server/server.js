@@ -17,6 +17,7 @@ const {
   getAllActiveRooms,
 } = require("./utils");
 const ADMIN = "Admin";
+// console.log(UsersState);
 
 app.use(express.static(path.join(__dirname, "public")));
 // app.get("/", (req, res) => {
@@ -56,8 +57,13 @@ io.on("connection", (socket) => {
     }
 
     // Activate the user in the specified room
-    const user = activateUser(username, socket.id, room);
-    console.log(`${user.name} has joined room: ${user.room}`);
+    const user = activateUser({
+      username: username,
+      id: socket.id,
+      room: room,
+    });
+    console.log(`${user.username} has joined room: ${user.room}`);
+    console.log(UsersState);
 
     // Join the specified room
     socket.join(user.room);
@@ -86,22 +92,19 @@ io.on("connection", (socket) => {
 
     // Emit the updated list of active rooms to all clients
     io.emit("activeRooms", { rooms: getAllActiveRooms() });
-
-
   });
 
   // Listen for chat messages from the client/Frontend
   socket.on("chat message", ({ message, username }) => {
     const user = getUser(socket.id);
 
-    if(!user) {
+    if (!user) {
       // If the user is not found, we can ignore the message
       console.warn(`User with ID ${socket.id} not found. Ignoring message.`);
       return;
     }
 
-    
-    if (!message || !username) { 
+    if (!message || !username) {
       console.warn("Message or username is empty. Ignoring message.");
       return;
     }
@@ -151,7 +154,9 @@ io.on("connection", (socket) => {
     // Check if the user is in a room before broadcasting activity
     const room = getUser(socket.id)?.room;
     if (!room) {
-      console.warn(`User with ID ${socket.id} is not in a room. Ignoring activity.`);
+      console.warn(
+        `User with ID ${socket.id} is not in a room. Ignoring activity.`
+      );
       return;
     }
     socket.broadcast.to(room).emit("activity", name);

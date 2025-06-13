@@ -12,10 +12,10 @@ const buildMessage = ({ message, username }) => {
   };
 };
 
-const activateUser = (name, id, room) => {
+const activateUser = ({username, id, room}) => {
   const user = {
     id: id,
-    name: name,
+    username: username,
     room: room,
   };
   UsersState.setUsers([

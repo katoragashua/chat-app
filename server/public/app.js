@@ -6,9 +6,7 @@ const roomInput = document.getElementById("roomInput");
 const joinButton = document.getElementById("joinButton");
 const messages = document.getElementById("messagesDisplay");
 const typingIndicator = document.getElementById("typingIndicator");
-const message = messageInput.value.trim();
-const room = roomInput.value.trim();
-const username = usernameInput.value.trim();
+const roomForm = document.getElementById("roomForm");
 
 const sendMessage = (e) => {
   e.preventDefault();
@@ -28,10 +26,13 @@ const sendMessage = (e) => {
 
 const joinRoom = (e) => {
   e.preventDefault();
-  if (!room || !username) return;
+  const room = roomInput.value.trim();
+  const username = usernameInput.value.trim();
 
+  if (!room || !username) return;
+  console.log({ username, room });
   // Emit join room event
-  socket.emit("join room", { room, username });
+  socket.emit("join room", { username, room });
 
   // Clear the input fields
   roomInput.value = "";
@@ -42,7 +43,7 @@ const joinRoom = (e) => {
 };
 
 chatForm.addEventListener("submit", sendMessage);
-joinButton.addEventListener("click", joinRoom);
+roomForm.addEventListener("submit", joinRoom);
 
 // Listen for chat messages from the server/Backend
 socket.on("chat message", ({ message, username, timeStamp }) => {
