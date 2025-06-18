@@ -7,6 +7,8 @@ const joinButton = document.getElementById("joinButton");
 const messages = document.getElementById("messagesDisplay");
 const typingIndicator = document.getElementById("typingIndicator");
 const roomForm = document.getElementById("roomForm");
+const userList = document.getElementById("userList");
+const roomsList = document.getElementById("roomsList");
 
 const sendMessage = (e) => {
   e.preventDefault();
@@ -44,13 +46,35 @@ const joinRoom = (e) => {
 
 chatForm.addEventListener("submit", sendMessage);
 roomForm.addEventListener("submit", joinRoom);
+messageInput.addEventListener("keypress", (e) => {
+  socket.emit("activity", `${socket.id.substring(0, 6)} is typing...`);
+});
 
 // Listen for chat messages from the server/Backend
 socket.on("chat message", ({ message, username, timeStamp }) => {
   console.log("Received message:", message, "from", username);
 
   const chatMessage = document.createElement("li");
-  chatMessage.textContent = `${username}: ${message}`;
+  chatMessage.className = "post";
+  if (username === usernameInput.value.trim())
+    chatMessage.className = "post post--left";
+  if (username !== usernameInput.value.trim() && username !== "Admin")
+    chatMessage.className = "post post--right";
+  if (username !== "Admin")
+    chatMessage.innerHTML = `<div class="post__header ${
+      username === usernameInput.value.trim()
+        ? "post__header--user"
+        : "post__header--reply"
+    }">
+      <span class="post__header--username">${username}</span>
+      <span class="post__header--timestamp">${timeStamp}</span>
+    </div>
+      <div class="post__message">
+      ${message}</div>`;
+  else
+    chatMessage.innerHTML = `<div class="post__message">
+    ${message}
+    </div>`;
   messages.appendChild(chatMessage);
   window.scrollTo(0, document.body.scrollHeight);
   typingIndicator.style.display = "none";
@@ -60,10 +84,6 @@ socket.on("connect", () => {
   console.log("Connected to server with ID:", socket.id);
   // // Emit a welcome message to the connected client
   // socket.emit("chat message", "Welcome to the chat!");
-});
-
-messageInput.addEventListener("keypress", (e) => {
-  socket.emit("activity", `${socket.id.substring(0, 6)} is typing...`);
 });
 
 let typingTimeout;
@@ -78,3 +98,37 @@ socket.on("activity", (data) => {
     typingIndicator.style.display = "none";
   }, 1000);
 });
+
+// Listen for user list updates from the server/Backend
+socket.on("userList", ({ users }) => {
+  showUsers(users);
+});
+// Listen for active rooms updates from the server/Backend
+socket.on("activeRooms", ({ rooms }) => {
+  showRooms(rooms);
+});
+
+const showUsers = (users) => {
+  userList.textContent = "";
+  if (users) {
+    userList.innerHTML = `<em>Users in this ${roomInput.value.trim()}: </em>`;
+    users.forEach((user) => {
+      if (user === users[users.length - 1]) {
+        userList.textContent += `${user.username}.`;
+      }
+      userList.textContent += `${user.username}, `;
+    });
+  }
+};
+const showRooms = (rooms) => {
+  roomsList.textContent = "";
+  if (rooms) {
+    roomsList.innerHTML = `<em>Active Rooms:</em>`;
+    rooms.forEach((room) => {
+      if (room === rooms[rooms.length - 1]) {
+        roomsList.textContent += `${room}.`;
+      }
+      roomsList.textContent += `${room}, `;
+    });
+  }
+};
