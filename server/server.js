@@ -81,7 +81,7 @@ io.on("connection", (socket) => {
     socket.broadcast.to(user.room).emit(
       "chat message",
       buildMessage({
-        message: `${user.name} has joined the room!`,
+        message: `${user.username} has joined the room!`,
         username: ADMIN,
       })
     );
@@ -114,6 +114,7 @@ io.on("connection", (socket) => {
       "chat message",
       buildMessage({ message: message, username: username })
     );
+    
   });
 
   // // Notify all clients when a new user joins

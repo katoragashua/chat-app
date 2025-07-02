@@ -12,6 +12,12 @@ const buildMessage = ({ message, username }) => {
   };
 };
 
+// console.log(buildMessage({
+//   message: "Welcome to the chat!",
+//   username: "Jason",
+// }));
+
+
 const activateUser = ({username, id, room}) => {
   const user = {
     id: id,

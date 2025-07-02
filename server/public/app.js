@@ -10,6 +10,7 @@ const roomForm = document.getElementById("roomForm");
 const userList = document.getElementById("userList");
 const roomsList = document.getElementById("roomsList");
 
+
 const sendMessage = (e) => {
   e.preventDefault();
   // Get the values from the input fields
@@ -34,11 +35,11 @@ const joinRoom = (e) => {
   if (!room || !username) return;
   console.log({ username, room });
   // Emit join room event
-  socket.emit("join room", { username, room });
+  socket.emit("join room", { room, username });
 
-  // Clear the input fields
-  roomInput.value = "";
-  usernameInput.value = "";
+  // // Clear the input fields
+  // roomInput.value = "";
+  // usernameInput.value = "";
   messageInput.focus();
   // Optionally, you can hide the join button after joining
   // joinButton.style.display = "none";
@@ -51,7 +52,7 @@ messageInput.addEventListener("keypress", (e) => {
 });
 
 // Listen for chat messages from the server/Backend
-socket.on("chat message", ({ message, username, timeStamp }) => {
+socket.on("chat message", ({ message, username, timestamp }) => {
   console.log("Received message:", message, "from", username);
 
   const chatMessage = document.createElement("li");
@@ -67,7 +68,7 @@ socket.on("chat message", ({ message, username, timeStamp }) => {
         : "post__header--reply"
     }">
       <span class="post__header--username">${username}</span>
-      <span class="post__header--timestamp">${timeStamp}</span>
+      <span class="post__header--timestamp">${timestamp}</span>
     </div>
       <div class="post__message">
       ${message}</div>`;
